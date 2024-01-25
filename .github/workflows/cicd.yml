@@ -3,20 +3,22 @@ on:
   push:
     branches: ["main", "cicd-setup"]
 jobs:
-  get-source-code:
+  php-linter:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout From Tag in phpbb repo
-        uses: AlexAtkinson/github-action-checkout-from-tag@latest
-        id: checkout
+      - uses: actions/checkout@v2
+      - id: PHP-Lint
+        uses: J3-Tech/PHP-Lint-Action@v0.0.5
         with:
-          dir: release-3.3.11
-          repo: https://github.com/phpbb/phpbb.git
-          tag: release-3.3.11
-      - name: Install dependencies
-        run: |
-          sudo apt install libzip-dev -y
-          ls release-3.3.11/
-          cd release-3.3.11/phpbb/phpBB
-          php ../composer.phar update
-          
+          path: ./phpBB3
+          exclude: ./phpBB3/vendor
+  gitleaks-check:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
