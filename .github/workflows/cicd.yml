@@ -6,14 +6,14 @@ jobs:
   get-source-code:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout pydio/cells repo
+      - name: Checkout phpbb repo
         uses: actions/checkout@v4
         with:
             path: release-3.3.11
             repository: phpbb/phpbb
       - name: Install dependencies
         run: |
-          apt install libzip-dev -y
+          sudo apt install libzip-dev -y
           cd phpbb/phpBB
           php ../composer.phar update
           
