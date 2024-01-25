@@ -1,0 +1,20 @@
+name: CI-CD main pipeline
+on: 
+  push:
+    branches: ["main"]
+jobs:
+  get-source-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pydio/cells repo
+        uses: actions/checkout@v4
+        with:
+            path: release-3.3.11
+            repository: phpbb/phpbb
+      - name: Install dependencies
+        run: |
+          apt update && apt upgrade -y
+          apt install libzip-dev -y
+          cd phpbb/phpBB
+          php ../composer.phar update
+          
