@@ -18,6 +18,6 @@ jobs:
           sudo apt install libzip-dev -y
           ls
           cd release-3.3.11/phpbb/phpBB
-          ls release-3.3.11/phpbb
+          ls release-3.3.11/
           php ../composer.phar update
           
