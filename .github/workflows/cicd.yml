@@ -8,13 +8,16 @@ jobs:
     steps:
       - name: Checkout From Tag in phpbb repo
         uses: AlexAtkinson/github-action-checkout-from-tag@latest
+        id: checkout
         with:
-            dir: release-3.3.11
-            repo: https://github.com/phpbb/phpbb.git
-            tag: release-3.3.11
+          dir: release-3.3.11
+          repo: https://github.com/phpbb/phpbb.git
+          tag: release-3.3.11
       - name: Install dependencies
         run: |
           sudo apt install libzip-dev -y
+          ls
           cd release-3.3.11/phpbb/phpBB
+          ls release-3.3.11/phpbb
           php ../composer.phar update
           
