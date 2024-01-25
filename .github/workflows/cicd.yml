@@ -6,14 +6,15 @@ jobs:
   get-source-code:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout phpbb repo
-        uses: actions/checkout@v4
+      - name: Checkout From Tag in phpbb repo
+        uses: AlexAtkinson/github-action-checkout-from-tag@latest
         with:
-            path: release-3.3.11
-            repository: phpbb/phpbb
+            dir: release-3.3.11
+            repo: https://github.com/phpbb/phpbb.git
+            tag: release-3.3.11
       - name: Install dependencies
         run: |
           sudo apt install libzip-dev -y
-          cd phpbb/phpBB
+          cd release-3.3.11/phpbb/phpBB
           php ../composer.phar update
           
