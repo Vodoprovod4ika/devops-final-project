@@ -13,7 +13,6 @@ jobs:
             repository: phpbb/phpbb
       - name: Install dependencies
         run: |
-          apt update && apt upgrade -y
           apt install libzip-dev -y
           cd phpbb/phpBB
           php ../composer.phar update
