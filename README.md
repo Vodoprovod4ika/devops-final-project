@@ -1,5 +1,6 @@
 ## Devops-final-project pre-requisites
-- Proxmox VM with following version:
+- Password for the ansible vault - will provide it over teams
+- VM which should be set beforehand. Currently using Proxmox VM with following version:
   ```
     DISTRIB_ID=Ubuntu
     DISTRIB_RELEASE=22.04
@@ -18,7 +19,12 @@
     PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
     UBUNTU_CODENAME=jammy
   ```
+- VM should have ansible installed
 - Ansible script to prepare mysql server and k3s:
+  - first disable firewall
+    ```
+    sudo ufw disable
+    ```
   - run command:
     ```
     ansible-playbook playbook.yaml -e secrets.yml --ask-vault-pass
@@ -27,6 +33,7 @@
 ## Future improvements
 - Execute unit tests in the pipeline
 - Make additional git actions for different branches
+- Ansible should be improved for the k3s install
 
 ### CI-CD executed in github actions
 - PHP linter

@@ -1,8 +1,7 @@
 - name: Setup of Kubernetes and Mysql DB
   hosts: localhost
-  gather_facts: true
   become: true
-  
+
   vars_files:
     - ./secrets.yml
 
@@ -38,11 +37,25 @@
         name: "{{ db_name }}"
         state: present
 
+    - name: Enable remote login to mysql
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: 'bind-address = 0.0.0.0'
+        backup: true
+      notify:
+        - Restart mysql
+
     - name: Setup K3S server
       ansible.builtin.shell: |
-        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - --flannel-backend none --token {{ '{{ k3s_token }}' }}
+        curl -sfL https://get.k3s.io | sh -
 
-    - name: Get token
-      ansible.builtin.shell: "cat /etc/rancher/k3s/k3s.yaml"
+    - name: Set k3s key to be readable
+      ansible.builtin.shell: "chmod 644 /etc/rancher/k3s/k3s.yaml"
       become: true
-      register: cluster_key
+  
+  handlers:
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted
