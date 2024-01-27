@@ -6,6 +6,7 @@
 
 ## Future improvements
 - Execute unit tests in the pipeline
+- Make additional git actions for different branches
 
 ### CI-CD executed in github actions
 - PHP linter
