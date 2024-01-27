@@ -1,0 +1,48 @@
+- name: Setup of Kubernetes and Mysql DB
+  hosts: localhost
+  gather_facts: true
+  become: true
+  
+  vars_files:
+    - ./secrets.yml
+
+  tasks:
+    - name: Install mysql server
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      loop:
+        - mysql-server
+        - mysql-client
+        - python3-mysqldb
+        - libmysqlclient-dev
+      become: true
+
+    - name: Start and enable mysql service
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Create mysql user
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "*.*:ALL"
+        host: "%"
+        state: present
+
+    - name: Create mysql table
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Setup K3S server
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - --flannel-backend none --token {{ '{{ k3s_token }}' }}
+
+    - name: Get token
+      ansible.builtin.shell: "cat /etc/rancher/k3s/k3s.yaml"
+      become: true
+      register: cluster_key
