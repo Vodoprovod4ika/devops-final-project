@@ -1,0 +1,61 @@
+- name: Setup of Kubernetes and Mysql DB
+  hosts: localhost
+  become: true
+
+  vars_files:
+    - ./secrets.yml
+
+  tasks:
+    - name: Install mysql server
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      loop:
+        - mysql-server
+        - mysql-client
+        - python3-mysqldb
+        - libmysqlclient-dev
+      become: true
+
+    - name: Start and enable mysql service
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Create mysql user
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "*.*:ALL"
+        host: "%"
+        state: present
+
+    - name: Create mysql table
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Enable remote login to mysql
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: 'bind-address = 0.0.0.0'
+        backup: true
+      notify:
+        - Restart mysql
+
+    - name: Setup K3S server
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | sh -
+
+    - name: Set k3s key to be readable
+      ansible.builtin.shell: "chmod 644 /etc/rancher/k3s/k3s.yaml"
+      become: true
+  
+  handlers:
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted

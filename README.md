@@ -1,12 +1,39 @@
 ## Devops-final-project pre-requisites
-- Running Mysql server 
-  - Created user and empty Database - user should have all permissions for this database
-- Installed docker to be able to run the container
-    - not tested on the apple arm cpu
+- Password for the ansible vault - will provide it over teams
+- VM which should be set beforehand. Currently using Proxmox VM with following version:
+  ```
+    DISTRIB_ID=Ubuntu
+    DISTRIB_RELEASE=22.04
+    DISTRIB_CODENAME=jammy
+    DISTRIB_DESCRIPTION="Ubuntu 22.04.3 LTS"
+    PRETTY_NAME="Ubuntu 22.04.3 LTS"
+    NAME="Ubuntu"
+    VERSION_ID="22.04"
+    VERSION="22.04.3 LTS (Jammy Jellyfish)"
+    VERSION_CODENAME=jammy
+    ID=ubuntu
+    ID_LIKE=debian
+    HOME_URL="https://www.ubuntu.com/"
+    SUPPORT_URL="https://help.ubuntu.com/"
+    BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+    PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+    UBUNTU_CODENAME=jammy
+  ```
+- VM should have ansible installed
+- Ansible script to prepare mysql server and k3s:
+  - first disable firewall
+    ```
+    sudo ufw disable
+    ```
+  - run command:
+    ```
+    ansible-playbook playbook.yaml -e secrets.yml --ask-vault-pass
+    ```
 
 ## Future improvements
 - Execute unit tests in the pipeline
 - Make additional git actions for different branches
+- Ansible should be improved for the k3s install
 
 ### CI-CD executed in github actions
 - PHP linter
