@@ -1,7 +1,7 @@
 name: CI-CD main pipeline
 on: 
   push:
-    branches: ["main", "cicd-setup"]
+    branches: ["main"]
 jobs:
   php-linter:
     runs-on: ubuntu-latest
