@@ -6,6 +6,10 @@
     - ./secrets.yml
 
   tasks:
+    - name: Disable ufw
+      community.general.ufw:
+        state: disabled
+
     - name: Install mysql server
       ansible.builtin.package:
         name: "{{ item }}"
@@ -48,7 +52,7 @@
 
     - name: Setup K3S server
       ansible.builtin.shell: |
-        curl -sfL https://get.k3s.io | sh -
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.26.12+k3s1 sh -s
 
     - name: Set k3s key to be readable
       ansible.builtin.shell: "chmod 644 /etc/rancher/k3s/k3s.yaml"
