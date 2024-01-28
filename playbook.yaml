@@ -28,8 +28,8 @@
       community.mysql.mysql_user:
         name: "{{ db_user }}"
         password: "{{ db_password }}"
-        priv: "*.*:ALL"
-        host: "%"
+        priv: '*.*:ALL'
+        host: '%'
         state: present
 
     - name: Create mysql table
@@ -53,7 +53,7 @@
     - name: Set k3s key to be readable
       ansible.builtin.shell: "chmod 644 /etc/rancher/k3s/k3s.yaml"
       become: true
-  
+
   handlers:
     - name: Restart mysql
       service:

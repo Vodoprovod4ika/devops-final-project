@@ -1,0 +1,64 @@
+- name: Setup phpbbcontainer
+  hosts: localhost
+  vars:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+
+  tasks:
+    - name: Create namespace
+      kubernetes.core.k8s:
+        name: phpbb3
+        state: present
+        api_version: v1
+        kind: Namespace
+        kubeconfig: "{{ kubeconfig }}"
+
+    - name: Create deployment
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: phpbb3-deployment
+            namespace: phpbb3
+            labels:
+              app: phpbb3
+          spec:
+            selector:
+              matchLabels:
+                app: phpbb3
+            replicas: 1
+            strategy:
+              type: RollingUpdate
+            template:
+              metadata:
+                labels:
+                  app: phpbb3
+              spec:
+                containers:
+                - name: phpbb3
+                  image: vodoprovod4ika/devops-final-project:5c2b8c969744321113fb946ed161238b6ec1a26a
+                  ImagePullPolicy: IfNotPresent
+                  ports:
+                  - containerPort: 80
+                    port: 80
+
+    - name: Create service for phpbb3
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: phpbb3
+            namespace: phpbb3
+          spec:
+            type: NodePort
+            selector:
+              app: phpbb3
+            ports:
+            - nodePort: 30080
+              name: port-30080-tcp
+              port: 80
