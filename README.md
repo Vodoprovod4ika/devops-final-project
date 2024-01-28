@@ -29,6 +29,11 @@
     ```
     ansible-playbook playbook.yaml -e secrets.yml --ask-vault-pass
     ```
+  - run command:
+    ```
+    ansible-playbook phpbb.yaml
+    ```
+    You should be able to navigate to http://[vm-ip:]30080 and see the phpbb install page. You can use the DB user, password and db name in the install. All should work after that.
 
 ## Future improvements
 - Execute unit tests in the pipeline
