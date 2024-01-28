@@ -19,12 +19,9 @@
     PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
     UBUNTU_CODENAME=jammy
   ```
+  - VM have 2cpu and 4GB ram
 - VM should have ansible installed
 - Ansible script to prepare mysql server and k3s:
-  - first disable firewall
-    ```
-    sudo ufw disable
-    ```
   - run command:
     ```
     ansible-playbook playbook.yaml -e secrets.yml --ask-vault-pass
@@ -39,6 +36,7 @@
 - Execute unit tests in the pipeline
 - Make additional git actions for different branches
 - Ansible should be improved for the k3s install
+- Fix versioning for the docker image to use x.x.[cicd pipeline build number?!]
 
 ### CI-CD executed in github actions
 - PHP linter
